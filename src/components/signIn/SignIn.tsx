@@ -72,14 +72,37 @@ export default function SignIn() {
     }
   };
       const handleForgotPassword = () => {
-    navigate('/forget-password')
+    navigate('/password-change')
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <ToastContainer />
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" >
         <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
+          sx={{
+            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          ></Box>
         <Box
           sx={{
             marginTop: 8,
@@ -135,7 +158,7 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2" onClick={handleForgotPassword}>
+                <Link href='/forget-Password' variant="body2" onClick={handleForgotPassword}>
                   Forgot password?
                 </Link>
               </Grid>
