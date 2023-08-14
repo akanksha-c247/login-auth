@@ -15,11 +15,12 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ILoginAuth } from '../Types';
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ILoginAuth>({
     email: '',
     password: '',
   });
@@ -52,17 +53,15 @@ export default function SignIn() {
     }
   };
 
-  const handleSubmit = (event:any) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
     const storedData = localStorage.getItem('storageData');
     if (storedData) {
-      const storedFormData = JSON.parse(storedData);
-
-      if (
-        storedFormData.email === formData.email &&
-        storedFormData.password === formData.password
-      ) {
+      const parsedStoredData: ILoginAuth[] = JSON.parse(storedData);
+      if (parsedStoredData.some(
+        (data) => data.email === formData.email && data.password === formData.password) ) {
+        const sessionData = {email:formData.email,authenticated:true}
+        localStorage.setItem('sessionData',JSON.stringify(sessionData));
         navigate('/Dashboard');
         toast.success('Authentication successful');
       } else {
@@ -72,7 +71,7 @@ export default function SignIn() {
       toast.error('No stored user data found');
     }
   };
-  const handleForgotPassword = () => {
+      const handleForgotPassword = () => {
     navigate('/forget-password')
   };
 
