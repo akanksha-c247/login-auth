@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -14,18 +14,21 @@ import "react-toastify/dist/ReactToastify.css";
 
 const PasswordChange: React.FC = () => {
   const navigate = useNavigate();
+  const location=useLocation()
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const sessionStoageData = localStorage.getItem("sessionData");
-    const userData: FormData | null = sessionStoageData? JSON.parse(sessionStoageData): null;
-    if (userData && userData.email === email) {
-      setEmail(userData.email);
+    const displyEmail=location?.state
+    if(!displyEmail){
+      navigate('/forget-password')
     }
+
+    console.log('displyEmail: ', displyEmail);
   }, []);
+
   
   const handleOldPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -41,26 +44,22 @@ const PasswordChange: React.FC = () => {
     event.preventDefault();
     const existingUserDataJson = localStorage.getItem("storageData");
 const existingUserData: FormData[] = existingUserDataJson ? JSON.parse(existingUserDataJson) : [];
-const userExists = existingUserData.filter((userData) => userData.password === oldPassword && userData.email === email);
+const userExists = existingUserData.filter((userData) => userData.password === oldPassword && userData.email === location?.state);
 console.log('userExists: ', userExists);
-
-    // if (userExists) {
-    //   setError(false);
-    //   const storedPassword = localStorage.getItem("password");
-    //   console.log('storedPassword: ', storedPassword);
-    //   if (storedPassword === oldPassword) {
-    //     localStorage.setItem("password", newPassword);
-    //     console.log('newPassword: ', newPassword);
-    //     localStorage.setItem("sessionData", "{}");
-    // navigate("/");
-    //   } else {
-    //     setError(true);
-    //     toast.error("Old password does not match");
-    //   }
-    // } else {
-    //   setError(true);
-    // }
-  };
+debugger
+  if (userExists.length > 0) {
+    setError(false);
+    const updatedRows = existingUserData.map(row =>
+      row.email === location?.state ? { ...row, password: newPassword } : row
+    );
+    localStorage.setItem("storageData", JSON.stringify(updatedRows));
+    
+    return navigate("/",{state:"passordUpdated"} );
+  
+    }
+        setError(true);
+        toast.error("Old password does not match");
+    };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -80,7 +79,7 @@ console.log('userExists: ', userExists);
             type="email"
             autoComplete="email"
             disabled
-            value={email}
+            value={location?.state}
           />
           <TextField
             variant="outlined"

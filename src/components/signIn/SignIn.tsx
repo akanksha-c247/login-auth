@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ILoginAuth } from '../Types';
@@ -33,7 +33,7 @@ export default function SignIn() {
     return emailRegex.test(email);
   };
   const navigate = useNavigate();
-
+const location = useLocation()
   const handleInputChange = (e:any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -52,6 +52,10 @@ export default function SignIn() {
       }));
     }
   };
+  if(location?.state === 'passordUpdated'){
+    debugger
+   toast.success('password succefully changed')
+  }
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();

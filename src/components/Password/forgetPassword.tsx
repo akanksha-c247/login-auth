@@ -38,7 +38,7 @@ export default function ForgotPassword({
       setError(false);
       onPasswordResetRequest(email);
       localStorage.setItem("sessionData", "{}");
-      navigate("/password-change");
+      navigate("/password-change",{state:email});
     }
   };
 
